@@ -5,7 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -54,9 +55,24 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/employee", func(c *fiber.Ctx) {
+	app.Get("/employee", func(c *fiber.Ctx) error {
 
+		query := bson.D{{}}
+
+		cursor, err := mg.Db.Collection("employees").Find(c.Context(), query)
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		var employees []Employee = make([]Employee, 0)
+
+		if err := cursor.All(c.Context(), &employees); err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		return c.JSON(employees)
 	})
+
 	app.Post("/employee")
 	app.Put("/employee/:id")
 	app.Delete("/employee/:id")
