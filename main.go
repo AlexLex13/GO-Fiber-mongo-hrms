@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber"
@@ -10,8 +11,8 @@ import (
 )
 
 type MongoInstance struct {
-	Client
-	Db
+	Client *mongo.Client
+	Db     *mongo.Database
 }
 
 var mg MongoInstance
@@ -20,11 +21,11 @@ const dbName = "fiber-hrms"
 const mongoURI = "mongodb://localhost:27017" + dbName
 
 func Connect() error {
-	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
+	client, _ := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	err = client.Connect(ctx)
+	err := client.Connect(ctx)
 	db := client.Database(dbName)
 
 	if err != nil {
@@ -39,6 +40,11 @@ func Connect() error {
 }
 
 func main() {
+
+	if err := Connect(); err != nil {
+		log.Fatal(err)
+	}
+
 	app := fiber.New()
 
 	app.Get("/employee", func(c *fiber.Ctx) {
