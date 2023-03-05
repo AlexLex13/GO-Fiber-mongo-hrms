@@ -157,6 +157,7 @@ func main() {
 		}
 
 		return c.Status(200).JSON("Record deleted")
-
 	})
+
+	log.Fatal(app.Listen(":3003"))
 }
