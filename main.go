@@ -20,7 +20,7 @@ type MongoInstance struct {
 var mg MongoInstance
 
 const dbName = "fiber-hrms"
-const mongoURI = "mongodb://localhost:27017" + dbName
+const mongoURI = "mongodb://localhost:27017/" + dbName
 
 func Connect() error {
 	client, _ := mongo.NewClient(options.Client().ApplyURI(mongoURI))
