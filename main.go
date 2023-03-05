@@ -39,6 +39,13 @@ func Connect() error {
 	return nil
 }
 
+type Employee struct {
+	ID     string
+	Name   string
+	Salary float64
+	Age    float64
+}
+
 func main() {
 
 	if err := Connect(); err != nil {
