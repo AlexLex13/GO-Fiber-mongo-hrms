@@ -40,10 +40,10 @@ func Connect() error {
 }
 
 type Employee struct {
-	ID     string
-	Name   string
-	Salary float64
-	Age    float64
+	ID     string  `json:"id,omitempty" bson:"_id,omitempty"`
+	Name   string  `json:"name"`
+	Salary float64 `json:"salary"`
+	Age    float64 `json:"age"`
 }
 
 func main() {
